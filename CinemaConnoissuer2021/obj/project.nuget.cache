@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "GaA+nRcvEwXLcXUDgn73FigHyOmfqf453L88jTsTewvs7BCihXc3EGcB7QMtemvgeG1bA9evMPYyFht1QKhS/g==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\B_RIV\\Documents\\College Courses\\projects\\C# and ASP.NET\\C#_Bradleys_project\\CinemaConnoissuer2021\\CinemaConnoissuer2021.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\B_RIV\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.12\\microsoft.netcore.app.host.win-x64.5.0.12.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,182 @@
+﻿@page
+@model IndexModel
+
+@{
+    string path = "https://image.tmdb.org/t/p/w500";
+    string TvBackdrop_path = "https://image.tmdb.org/t/p/w1920_and_h800_multi_faces" +
+        Model.TvBackdropPath;
+    string movieBackdrop_path = "https://image.tmdb.org/t/p/w1920_and_h800_multi_faces" +
+        Model.movieBackdropPath;
+}
+
+
+<div id="tvSearchForm">
+    <form method="POST" asp-page-handler="TvSearch">
+        <input id="tvSearchBox" type="text" name="search" placeholder="tv finder...">
+    </form>
+</div>
+
+<div id="tvPoster">
+    <form method="POST" asp-page-handler="GetTvDetails">
+        @for(int i = 0; i < Model.MAX_TV_RESULTS; i++) {
+            string posterPath = "";
+            if(Model.posterURLs[i] != null) {
+                posterPath = path + Model.posterURLs[i];
+                <div class="thumb" style="background: url(@posterPath); 
+                    background-size: 100%;" title="@Model.overviews[i]">
+                    <input type="submit" class="thumbButton" name="tvID" 
+                        value="@Model.tvIDs[i]" />
+                </div>
+            }
+            else {
+                // do nothing incomplete data!
+            }
+        }
+    </form>
+</div>
+
+<!--### tv details ###-->
+@if(Model.TvBackdropPath != "") {
+    <div id="TvDetails" style="background: url(@TvBackdrop_path); 
+        background-size: contain; background-repeat: no-repeat;">
+        <div id="TvDetailsCover">
+            <div id="leftTvDetails">
+                @{
+                    string lastPosterPath = "https://image.tmdb.org/t/p/w500" +
+                        Model.TvFullsizedPoster;
+                }
+                <div class="TvFullsizedPoster" style="background: url(@lastPosterPath); 
+                    background-size: 100%;">
+                </div>
+                <div id="TvVideos">
+                    @for (int i = 0; i < Model.MAX_VIDEO_COUNT; i++) {
+                        string youtubePath = "https://www.youtube.com/embed/" + @Model.videoIDs[i];
+                        <iframe class="trailer" 
+                            src="@youtubePath" 
+                            title="YouTube video player" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    }
+                </div>
+            </div>
+            <div id="rightTvDetails">
+                <h1>@Model.TvTitle (@Model.TvReleaseDate)</h1>
+                <h2>@Model.TvTagline</h2>
+                <p>@Model.TvOverview</p>
+                <p class="heroText">Seasons: @string.Format("{0:D}", Model.numOfSeasons)</p>
+                <p class="heroText">Episodes: @string.Format("{0:D}", Model.numOfEpisodes)</p>
+                <p>Vist the offical @Model.TvTitle homepage: 
+                    <a id="homepage" href="@Model.TvHomepage" title="Visit Tv Homepage" target="_blank">
+                        here
+                    </a>
+                </p>
+                <!-- Cast Pictures/Slider -->
+                <div id="castSlider">
+                    <form method="POST" asp-page-handler="GetTvActorDetails">
+                        @for(int i = 0; i < Model.castNames.Count; i++) {
+                            string castPic = "";
+                            castPic = path + Model.castPics[i];
+                            <div class="castCard">
+                                <div class="castImage" style="background: url(@castPic); 
+                                    background-size: 100%;">
+                                    <input type="submit" class="castButton" name="castID" 
+                                        value="@Model.castIDs[i]" />
+                                </div>
+                                <div class="castName">
+                                    <p>@Model.castNames[i]</p>
+                                </div>
+                            </div>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<div id="movieSearchForm">
+    <form method="POST" asp-page-handler="MovieSearch">
+        <input id="movieSearchBox" type="text" name="search" placeholder="movie finder...">
+    </form>
+</div>
+
+<div id="moviePoster">
+    <form method="POST" asp-page-handler="GetMovieDetails">
+        @for(int i = 0; i < Model.MAX_MOVIE_RESULTS; i++) {
+            string moviePosterPath = "";
+            if(Model.moviePosterURLs[i] != null) {
+                moviePosterPath = path + Model.moviePosterURLs[i];
+                <div class="thumb" style="background: url(@moviePosterPath); 
+                    background-size: 100%;" title="@Model.movieOverviews[i]">
+                    <input type="submit" class="thumbButton" name="movieID" 
+                        value="@Model.movieIDs[i]" />
+                </div>
+            }
+            else {
+                // do nothing incomplete data!
+            }
+        }
+    </form>
+</div>
+
+<!--### movie details ###-->
+@if(Model.movieBackdropPath != "") {
+    <div id="MovieDetails" style="background: url(@movieBackdrop_path); 
+        background-size: contain; background-repeat: no-repeat;">
+        <div id="MovieDetailsCover">
+            <div id="leftMovieDetails">
+                @{
+                    string lastMoviePosterPath = "https://image.tmdb.org/t/p/w500" +
+                        Model.movieFullsizedPoster;
+                }
+                <div class="MovieFullsizedPoster" style="background: url(@lastMoviePosterPath); 
+                    background-size: 100%;">
+                </div>
+                <div id="TvVideos">
+                    @for (int i = 0; i < Model.MAX_MOVIE_VIDEO_COUNT; i++) {
+                        string youtubePath = "https://www.youtube.com/embed/" + @Model.movieVideoIDs[i];
+                        <iframe class="trailer" 
+                            src="@youtubePath" 
+                            title="YouTube video player" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    }
+                </div>
+            </div>
+            <div id="rightMovieDetails">
+                <h1>@Model.movieTitle (@Model.movieReleaseDate)</h1>
+                <h2>@Model.movieTagline</h2>
+                <p>@Model.movieOverview</p>
+                <p class="heroText">Budget: @string.Format("{0:C}", Model.movieBudget)</p>
+                <p class="heroText">Revenue: @string.Format("{0:C}", Model.movieRevenue)</p>
+                <p>Vist the offical @Model.movieTitle homepage: 
+                    <a id="homepage" href="@Model.movieHomepage" title="Visit Movie Homepage" target="_blank">
+                        here
+                    </a>
+                </p>
+                <!-- Cast Pictures/Slider -->
+                <div id="movieCastSlider">
+                    <form method="POST" asp-page-handler="GetMovieActorDetails">
+                        @for(int i = 0; i < Model.movieCastNames.Count; i++) {
+                            string movieCastPic = "";
+                            movieCastPic = path + Model.movieCastPics[i];
+                            <div class="movieCastCard">
+                                <div class="movieCastImage" style="background: url(@movieCastPic); 
+                                    background-size: 100%;">
+                                    <input type="submit" class="movieCastButton" name="movieCastID" 
+                                        value="@Model.movieCastIDs[i]" />
+                                </div>
+                                <div class="movieCastName">
+                                    <p>@Model.movieCastNames[i]</p>
+                                </div>
+                            </div>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
